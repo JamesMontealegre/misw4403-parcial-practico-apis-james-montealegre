@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:14
+    container_name: first-midterm-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: first_midterm
+    ports:
+      - '5434:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - first_midterm_network
+
+  adminer:
+    image: adminer
+    container_name: adminer-midterm
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - '8080:8080'
+    networks:
+      - first_midterm_network
+
+networks:
+  first_midterm_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
