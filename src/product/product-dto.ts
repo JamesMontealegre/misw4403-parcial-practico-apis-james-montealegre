@@ -7,8 +7,6 @@ export class ProductDto {
     @IsNumber()
     readonly price: number;
 
-    @IsEnum(['Perishable', 'Non-perishable'], {
-        message: 'Type must be either Perishable or Non-perishable',
-    })
-    readonly type: 'Perishable' | 'Non-perishable';
+    @IsString()
+    readonly type: string;
 }

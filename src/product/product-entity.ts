@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
-import { Store } from '../store/store-entity';
+import { StoreEntity } from '../store/store-entity';
 
 @Entity()
-export class Product {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class ProductEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -15,7 +15,7 @@ export class Product {
   @Column()
   type: string;
 
-  @ManyToMany(() => Store, (store) => store.products)
+  @ManyToMany(() => StoreEntity, (store) => store.products)
   @JoinTable()
-  stores: Store[];
+  stores: StoreEntity[];
 }
