@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
-import { Product } from '../product/product-entity';
+import { ProductEntity } from '../product/product-entity';
 
 @Entity()
-export class Store {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class StoreEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -15,6 +15,6 @@ export class Store {
   @Column()
   address: string;
 
-  @ManyToMany(() => Product, (product) => product.stores)
-  products: Product[];
+  @ManyToMany(() => ProductEntity, (product) => product.stores)
+  products: ProductEntity[];
 }
