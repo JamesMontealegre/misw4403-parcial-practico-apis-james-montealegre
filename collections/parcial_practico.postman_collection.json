@@ -1,0 +1,482 @@
+{
+	"info": {
+		"_postman_id": "e4dd9584-da30-4ae3-9933-0d577f965029",
+		"name": "parcial_practico",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4426707"
+	},
+	"item": [
+		{
+			"name": "Create Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = pm.response.json()",
+							"pm.collectionVariables.set(\"product_id\", data.id);",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"   pm.response.to.have.status(201);",
+							"   pm.expect(data).to.be.an(\"object\");",
+							"   pm.expect(data).to.have.property(\"id\");",
+							"   pm.expect(data).to.have.property(\"name\");",
+							"   pm.expect(data).to.have.property(\"price\");",
+							"   pm.expect(data).to.have.property(\"type\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Organic Apple\",\n  \"price\": 3.5,\n  \"type\": \"Perishable\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/{{version}}/products",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"products"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Product",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{version}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"products"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\":\"d0632f13-ec04-4b99-9f1b-3d60e1315bd5\",\n    \"name\": \"Organic Apple\",\n    \"price\": 3.5,\n    \"type\": \"Perishable\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Find all products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    if (pm.response.code === 200) {",
+							"        const responseJson = pm.response.json();",
+							"        pm.expect(responseJson).to.be.an(\"array\");",
+							"        responseJson.forEach(product => {",
+							"            pm.expect(product).to.have.property(\"id\");",
+							"            pm.expect(product).to.have.property(\"name\");",
+							"            pm.expect(product).to.have.property(\"price\");",
+							"            pm.expect(product).to.have.property(\"type\");",
+							"        });",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Status code is 404 when not found\", function () {",
+							"    if (pm.response.code === 404) {",
+							"        pm.expect(pm.response.json().message).to.eql(\"The productId with the given id was not found\");",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/{{version}}/products",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"products"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Find all products",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{version}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"products"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": \"d0632f13-ec04-4b99-9f1b-3d60e1315bd5\",\n        \"name\": \"Wasabi\",\n        \"type\": \"Perishable\",\n        \"price\": 3\n    },\n    {\n        \"id\": \"d0632f13-ec04-4b99-9f1b-3d60e1315bd5\",\n        \"name\": \"Sake\",\n        \"type\": \"Perishable\",\n        \"price\": 5\n    },\n    {\n        \"id\": \"d0632f13-ec04-4b99-9f1b-3d60e1315bd5\",\n        \"name\": \"Tofu\",\n        \"type\": \"Perishable\",\n        \"price\": 10\n    }\n]\n"
+				}
+			]
+		},
+		{
+			"name": "Find one product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    if (pm.response.code === 200) {",
+							"        const responseJson = pm.response.json();",
+							"        pm.expect(responseJson).to.be.an(\"object\");",
+							"        pm.expect(data).to.have.property(\"id\");",
+							"        pm.expect(data).to.have.property(\"name\");",
+							"        pm.expect(data).to.have.property(\"type\");",
+							"        pm.expect(data).to.have.property(\"price\");",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Status code is 404 when not found\", function () {",
+							"    if (pm.response.code === 404) {",
+							"        pm.expect(pm.response.json().message).to.eql(\"The product_id with the given id was not found\");",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/{{version}}/products/{{product_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"products",
+						"{{product_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Find one product",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{version}}/products/{{product_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"products",
+								"{{product_id}}"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\":\"d0632f13-ec04-4b99-9f1b-3d60e1315bd5\",\n    \"name\": \"Organic Apple\",\n    \"price\": 3.5,\n    \"type\": \"Perishable\"\n}"
+				},
+				{
+					"name": "Find one not exists",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{version}}/products/00000000-0000-0000-0000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"products",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The product with the given id was not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    if (pm.response.code === 200) {",
+							"        const responseJson = pm.response.json();",
+							"        pm.expect(responseJson).to.be.an(\"object\");",
+							"        pm.expect(responseJson).to.have.property(\"id\");",
+							"        pm.expect(responseJson).to.have.property(\"name\");",
+							"        pm.expect(responseJson).to.have.property(\"type\");",
+							"        pm.expect(responseJson).to.have.property(\"price\");",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Status code is 404 when not found\", function () {",
+							"    if (pm.response.code === 404) {",
+							"        pm.expect(pm.response.json().message).to.eql(\"The product with the given id was not found\");",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Tacos de birria\",\n  \"type\": \"Perishable\",\n  \"price\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/{{version}}/products/{{productId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"products",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update product",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{version}}/products/{{productId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"products",
+								"{{productId}}"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"d0632f13-ec04-4b99-9f1b-3d60e1315bd5\",\n    \"name\": \"Tacos de birria\",\n    \"type\": \"Perishable\",\n    \"price\": 1\n}"
+				},
+				{
+					"name": "Update not exists",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{version}}/products/00000000-0000-0000-0000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"products",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The product with the given id was not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    if (pm.response.code === 204) {",
+							"        pm.response.to.have.body('');",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Status code is 404 when not found\", function () {",
+							"    if (pm.response.code === 404) {",
+							"        pm.expect(pm.response.json().message).to.eql(\"The product with the given id was not found\");",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/{{version}}/products/{{productId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"products",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete product",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{version}}/products/00000000-0000-0000-0000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{version}}",
+								"products",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The product with the given id was not found\"\n}"
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "localhost:3000"
+		},
+		{
+			"key": "version",
+			"value": "v1"
+		},
+		{
+			"key": "product_id",
+			"value": "0"
+		}
+	]
+}
